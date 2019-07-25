@@ -1,0 +1,227 @@
+;; ALIAS
+(defalias 'pi 'package-install)
+
+;; PACKAGE
+(package-initialize)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
+        ("org" . "http://orgmode.org/elpa/")
+	("marmalade" . "http://marmalade-repo.org/packages/")
+	("melpa-stable" . "https://stable.melpa.org/packages/")))
+
+;; add manual package directory to load-path
+(let ((default-directory (locate-user-emacs-file "./manual_package")))
+  (add-to-list 'load-path default-directory)
+  (normal-top-level-add-subdirs-to-load-path))
+
+;; automatically kill unnecessary buffers
+(require 'tempbuf)
+(add-hook 'dired-mode-hook 'turn-on-tempbuf-mode)
+(add-hook 'magit-mode-hook 'turn-on-tempbuf-mode)
+
+;; Auto complete
+(require 'auto-complete-config)
+
+;; よくわからない
+(ac-config-default)
+
+;; TABキーで自動補完を有効にする
+(ac-set-trigger-key "TAB")
+
+;; auto-complete-mode を起動時に(require 'auto-complete-config)
+
+;; よくわからない
+(ac-config-default)
+
+;; TABキーで自動補完を有効にする
+(ac-set-trigger-key "TAB")
+
+;; auto-complete-mode を起動時に有効にする
+(global-auto-complete-mode t)
+(global-auto-complete-mode t)
+
+
+;; APPEARANCE
+;; font
+(add-to-list 'default-frame-alist '(font . "ricty-18"))
+
+;; color theme
+(load-theme 'monokai t)
+
+;; alpha
+(if window-system 
+    (progn
+      (set-frame-parameter nil 'alpha 95)))
+
+;; 非アクティブウィンドウの背景色を設定
+(require 'hiwin)
+(hiwin-activate)
+(set-face-background 'hiwin-face "gray30")
+
+;; line numberの表示
+(require 'linum)
+(global-linum-mode 1)
+
+;; line number color
+(set-face-foreground 'linum "brightgreen")
+
+;; tabサイズ
+(setq default-tab-width 4)
+
+;; default scroll bar消去
+(if (display-graphic-p)
+    (progn
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1)))
+
+;; 現在ポイントがある関数名をモードラインに表示
+(which-function-mode 1)
+
+;; 対応する括弧をハイライト
+(show-paren-mode 1)
+
+;; リージョンのハイライト
+(transient-mark-mode 1)
+
+;; タイトルにフルパス表示
+(setq frame-title-format "%f")
+
+;;current directory 表示
+(let ((ls (member 'mode-line-buffer-identification
+                  mode-line-format)))
+  (setcdr ls
+    (cons '(:eval (concat " ("
+            (abbreviate-file-name default-directory)
+            ")"))
+	  (cdr ls))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ox-hugo htmlize elpy undo-tree golden-ratio golden-ratio-scroll-screen neotree elscreen hiwin monokai-theme auto-complete))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+;; STARTUP
+;; スタートアップメッセージを表示させない
+(setq inhibit-startup-message 1)
+
+;; ;; ターミナルで起動したときにメニューを表示しない
+;; (if (eq window-system 'x)
+;;     (menu-bar-mode 0) (menu-bar-mode 1))
+;; (menu-bar-mode nil)
+(menu-bar-mode 0)
+
+;; scratchの初期メッセージ消去
+(setq initial-scratch-message "")
+
+
+;; TAB AND SLIDER
+;; elscreen（上部タブ）
+(require 'elscreen)
+(elscreen-start)
+(global-set-key (kbd "s-t") 'elscreen-create)
+(global-set-key "\C-l" 'elscreen-next)
+(global-set-key "\C-r" 'elscreen-previous)
+(global-set-key (kbd "s-d") 'elscreen-kill)
+(set-face-attribute 'elscreen-tab-background-face nil
+                    :background "grey10"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-control-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-current-screen-face nil
+                    :background "grey20"
+                    :foreground "grey90")
+(set-face-attribute 'elscreen-tab-other-screen-face nil
+                    :background "grey30"
+                    :foreground "grey60")
+;;; [X]を表示しない
+(setq elscreen-tab-display-kill-screen nil)
+;;; [<->]を表示しない
+(setq elscreen-tab-display-control nil)
+;;; タブに表示させる内容を決定
+(setq elscreen-buffer-to-nickname-alist
+      '(("^dired-mode$" .
+         (lambda ()
+           (format "Dired(%s)" dired-directory)))
+        ("^Info-mode$" .
+         (lambda ()
+           (format "Info(%s)" (file-name-nondirectory Info-current-file))))
+        ("^mew-draft-mode$" .
+         (lambda ()
+           (format "Mew(%s)" (buffer-name (current-buffer)))))
+        ("^mew-" . "Mew")
+        ("^irchat-" . "IRChat")
+        ("^liece-" . "Liece")
+        ("^lookup-" . "Lookup")))
+(setq elscreen-mode-to-nickname-alist
+      '(("[Ss]hell" . "shell")
+        ("compilation" . "compile")
+        ("-telnet" . "telnet")
+        ("dict" . "OnlineDict")
+        ("*WL:Message*" . "Wanderlust")))
+
+;; neotree（サイドバー）
+(require 'neotree)
+(global-set-key "\C-o" 'neotree-toggle)
+
+;; SCROLL
+;; スクロールは1行ごとに
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
+
+;; スクロールの加速をやめる
+(setq mouse-wheel-progressive-speed nil)
+
+;; bufferの最後でカーソルを動かそうとしても音をならなくする
+(defun next-line (arg)
+  (interactive "p")
+  (condition-case nil
+      (line-move arg)
+    (end-of-buffer)))
+
+;; エラー音をならなくする
+(setq ring-bell-function 'ignore)
+
+
+;; WINDOW
+;; golden ratio
+(golden-ratio-mode 1)
+(add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
+
+;; active window move
+(global-set-key (kbd "<C-left>")  'windmove-left)
+(global-set-key (kbd "<C-down>")  'windmove-down)
+(global-set-key (kbd "<C-up>")    'windmove-up)
+(global-set-key (kbd "<C-right>") 'windmove-right)
+
+
+;; UNDO-TREE 
+;; undo-tree を読み込む
+(require 'undo-tree)
+
+;; undo-tree を起動時に有効にする
+(global-undo-tree-mode t)
+
+;; M-/ をredo に設定する。
+(global-set-key (kbd "M-/") 'undo-tree-redo)
+
+;; REVERT BUFFER
+ (global-auto-revert-mode t)
+
+;; PYTHON
+(elpy-enable)
+
+;;ox-hugo
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
