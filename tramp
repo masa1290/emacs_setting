@@ -1,0 +1,28 @@
+;; -*- emacs-lisp -*- <19/08/09 10:39:55 /Users/mosa/.emacs.d/tramp>
+;; Tramp connection history.  Don't change this file.
+;; You can delete it, forcing Tramp to reapply the checks.
+
+(((tramp-file-name "ssh" nil nil "lab" nil nil nil)
+  ("uname" "Linux 2.6.32-754.2.1.el6.x86_64")
+  ("locale" "LC_ALL=en_US.utf8")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("file-exists" "test -e")
+  ("case-insensitive" nil)
+  ("~" "/mnt/nfs/enomoto")
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("ls" "/bin/ls --color=never")
+  ("ls-quoting-style" t)
+  ("ls-dired" t)
+  ("stat" "env QUOTING_STYLE=locale \\stat")
+  ("id" "/usr/bin/id")
+  ("gid-integer" 2027)
+  ("readlink" "\\readlink")
+  ("gid-string" "enomoto")
+  ("env-u-option" t))
+ ((tramp-file-name "ssh" nil nil "la" nil nil nil)
+  nil))
